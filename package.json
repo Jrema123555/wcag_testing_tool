@@ -1,0 +1,51 @@
+{
+  "name": "accessibility-audit",
+  "version": "0.1.0",
+  "description": "Playwright and axe-powered website accessibility audits with CI quality gates",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "bin": {
+    "accessibility-audit": "./dist/cli/index.js"
+  },
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx src/cli/index.ts",
+    "audit": "tsx src/cli/index.ts",
+    "test": "vitest run",
+    "pretest": "npm run build",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "pretest:integration": "npm run build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "axe-core": "^4.13.0",
+    "commander": "^15.0.0",
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.2",
+    "eslint": "^10.10.0",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.13",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^5.0.0"
+  }
+}

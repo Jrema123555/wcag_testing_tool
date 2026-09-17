@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+accessibility-reports/
+reports/
+test-results/
+*.tgz
+.env
