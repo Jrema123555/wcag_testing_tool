@@ -181,7 +181,24 @@ Existing selected report files are overwritten. Use a different `--output` direc
 
 ## CI/CD
 
-This repository's CI uses local fixtures, never public websites. In a consumer project with this CLI installed as a development dependency and committed to its lockfile:
+The push and pull-request CI uses local fixtures, never public websites.
+
+To audit a website on demand, use [Website accessibility audit](.github/workflows/accessibility-audit.yml):
+
+1. Push the workflow to the repository's default branch so GitHub enables its manual trigger.
+2. Open **Actions → Website accessibility audit → Run workflow**.
+3. Enter the full website URL (for example, `https://example.com`) and select **Run workflow**.
+4. Download the **accessibility-report** artifact from the completed run and open `report.html`. The artifact also includes `report.json` and is retained for seven days.
+
+The workflow scans up to 20 same-origin pages using WCAG 2.2 AA checks. Serious or critical findings fail the run; configuration or scan errors also fail it. Available reports are uploaded even when the audit fails. The website must be reachable from the GitHub-hosted runner; `localhost` refers to that runner, not your computer.
+
+You can also trigger it with the GitHub CLI:
+
+```sh
+gh workflow run accessibility-audit.yml -f url=https://example.com
+```
+
+In a consumer project with this CLI installed as a development dependency and committed to its lockfile:
 
 ```yaml
 steps:

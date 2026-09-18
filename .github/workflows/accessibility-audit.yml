@@ -1,0 +1,55 @@
+name: Website accessibility audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Website URL to audit (absolute HTTP or HTTPS URL)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Build audit CLI
+        run: npm run build
+      - name: Audit website
+        env:
+          WEBSITE_URL: ${{ inputs.url }}
+        run: >-
+          node dist/cli/index.js
+          --max-pages 20
+          --standard wcag22
+          --level AA
+          --fail-on serious
+          --format all
+          --output accessibility-reports
+          -- "$WEBSITE_URL"
+      - name: Upload accessibility reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-report
+          path: |
+            accessibility-reports/report.html
+            accessibility-reports/report.json
+          if-no-files-found: warn
+          retention-days: 7
